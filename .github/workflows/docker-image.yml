@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build backend Docker image
-      working-directory: ToDoList/ToDoList  # Change to the directory where ToDoList Dockerfile resides
+      working-directory: ToDoList  # Change to the directory where ToDoList Dockerfile resides
       run: docker build . --file Dockerfile --tag my-backend-image:$(date +%s)
 
   build-frontend:
