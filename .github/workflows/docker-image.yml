@@ -21,5 +21,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build frontend Docker image
-      working-directory: ToDoList/todo_list_front  # Change to the directory where todo_list_front Dockerfile resides
+      working-directory: ToDoList/todo_list_front/  # Change to the directory where todo_list_front Dockerfile resides
       run: docker build . --file Dockerfile --tag my-frontend-image:$(date +%s)
