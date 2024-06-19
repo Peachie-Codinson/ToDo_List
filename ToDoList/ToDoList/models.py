@@ -13,7 +13,7 @@ class ToDoItem(models.Model):
     description = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
     date_to_be_completed = models.DateTimeField()
-    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default=LOW)
+    priority = models.CharField(    max_length=10, choices=PRIORITY_CHOICES, default=LOW)
 
     def __str__(self):
         return self.description

@@ -7,7 +7,16 @@ services:
     volumes:
       - .:/app
     ports:
+      - "8001:8000"
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
       - "8000:8000"
+    networks:
+      - mynetwork  # Define the network here
 
   frontend:
     build:
@@ -16,5 +25,9 @@ services:
       - ./todo_list_front:/app
     ports:
       - "3000:3000"
-    environment:  
+    environment:
       - CHOKIDAR_USEPOLLING=true
+
+networks:
+  mynetwork:
+    driver: bridge

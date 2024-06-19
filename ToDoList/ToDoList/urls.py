@@ -25,9 +25,15 @@ router.register(r'api/todos', ToDoItemViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/todos/', ToDoItemViewSet.as_view({'get': 'list', 'post': 'create'}), name='todo-list'),
-    #path('api/todos/', include('todos.urls')),
-    # path('', include('api.url')),
-    # path('', TemplateView.as_view(template_name='index.html')),
+    path('api/todos/', ToDoItemViewSet.as_view({
+        'get': 'list',     # GET /api/todos/
+        'post': 'create'   # POST /api/todos/
+    }), name='todo-list'),
+    path('api/todos/<int:pk>/', ToDoItemViewSet.as_view({
+        'get': 'retrieve',   # GET /api/todos/<id>/
+        'put': 'update',     # PUT /api/todos/<id>/
+        'patch': 'partial_update',  # PATCH /api/todos/<id>/
+        'delete': 'destroy'  # DELETE /api/todos/<id>/
+    }), name='todo-detail'),
     path('', include(router.urls)),
 ]
