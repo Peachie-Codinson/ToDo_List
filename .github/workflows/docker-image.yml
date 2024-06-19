@@ -8,11 +8,18 @@ on:
 
 jobs:
 
-  build:
-
+  build-backend:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build backend Docker image
+      working-directory: ToDoList  # Change to the directory where ToDoList Dockerfile resides
+      run: docker build . --file Dockerfile --tag my-backend-image:$(date +%s)
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build frontend Docker image
+      working-directory: todo_list_front  # Change to the directory where todo_list_front Dockerfile resides
+      run: docker build . --file Dockerfile --tag my-frontend-image:$(date +%s)
