@@ -16,10 +16,10 @@ jobs:
       working-directory: ToDoList  # Change to the directory where ToDoList Dockerfile resides
       run: docker build . --file Dockerfile --tag my-backend-image:$(date +%s)
 
-  build-frontend:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build frontend Docker image
-      working-directory: ToDoList/todo_list_front/  # Change to the directory where todo_list_front Dockerfile resides
-      run: docker build . --file Dockerfile --tag my-frontend-image:$(date +%s)
+  # build-frontend:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Build frontend Docker image
+  #     working-directory: ToDoList/todo_list_front/  # Change to the directory where todo_list_front Dockerfile resides
+  #     run: docker build . --file Dockerfile --tag my-frontend-image:$(date +%s)
