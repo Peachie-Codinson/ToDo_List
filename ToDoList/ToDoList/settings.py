@@ -17,23 +17,24 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-tht@mp)lkk(&f4p_9e3wzhy+!&#lz*4&@x7gu!g%2$@%+&0yd&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+# ALLOWED_HOSTS = ["localhost", "localhost:3000", "0.0.0.0", "0.0.0.0:8000"]
+COR_ALLOWED_HOSTS = ["localhost", "localhost:3000", "0.0.0.0", "0.0.0.0:8000"]
+
 
 
 # Application definition
 
 INSTALLED_APPS = [
     
-#    'corsheaders',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,11 +45,10 @@ INSTALLED_APPS = [
     'ToDoList',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
 
 
 MIDDLEWARE = [
-#    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
