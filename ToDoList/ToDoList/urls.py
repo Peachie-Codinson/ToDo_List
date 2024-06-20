@@ -18,10 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
-from .views import ToDoItemViewSet
+from .views import ToDoItemViewSet, InProgressToDoItemViewSet, CompletedToDoItemViewSet
 
-router = DefaultRouter()
-router.register(r'api/todos', ToDoItemViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,5 +33,10 @@ urlpatterns = [
         'patch': 'partial_update',  # PATCH /api/todos/<id>/
         'delete': 'destroy'  # DELETE /api/todos/<id>/
     }), name='todo-detail'),
-    path('', include(router.urls)),
+    path('api/todos/in-progress/', InProgressToDoItemViewSet.as_view({
+        'get': 'list'   # GET /api/todos/in-progress/
+    }), name='in-progress-todo-list'),
+    path('api/todos/completed/', CompletedToDoItemViewSet.as_view({
+        'get': 'list'   # GET /api/todos/completed/
+    }), name='in-progress-todo-list'),
 ]
