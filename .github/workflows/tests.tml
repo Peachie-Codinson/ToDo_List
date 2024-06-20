@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build backend Docker image
+      working-directory: ToDoList  # Change to the directory where ToDoList Dockerfile resides
+      run: docker build . --file Dockerfile --tag my-backend-image:$(date +%s)
