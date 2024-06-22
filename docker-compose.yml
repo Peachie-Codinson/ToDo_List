@@ -2,10 +2,10 @@ version: '3.9'
 
 services:
   web:
-    build: .
+    build: ./ToDoList
     command: gunicorn ToDoList.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - .:/app
+      - ./ToDoList:/app
     ports:
       - "8000:8000"  # Correct the port mapping to match Gunicorn's bind port
     networks:
@@ -13,11 +13,11 @@ services:
 
   django:
     build:
-      context: .
+      context: ./ToDoList
       dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:8080  # Ensure the command is set correctly
     volumes:
-      - .:/app
+      - ./ToDoList:/app
     ports:
       - "8080:8080"
     networks:
