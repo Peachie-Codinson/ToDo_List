@@ -19,7 +19,7 @@ Before running the application, ensure you have the following installed:
 ## Installation
 1. Clone the repository:
     ```
-    git clone [https://github.com/Peachie-Codinson/ToDo_List]
+    git clone https://github.com/Peachie-Codinson/ToDo_List
     ```
 
 2. Build and start the application using Docker Compose:
