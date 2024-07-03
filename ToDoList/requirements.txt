@@ -2,4 +2,4 @@ django
 djangorestframework
 gunicorn
 django-cors-headers
-pytest
+pytest-django
