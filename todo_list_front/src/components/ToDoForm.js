@@ -2,44 +2,29 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, Col, Row } from 'react-bootstrap';
 
-const ToDoForm = ({ fetchTodos, editingTodo, setEditingTodo }) => {
+const ToDoForm = ({ fetchTodos }) => {
     const [description, setDescription] = useState('');
     const [dateToBeCompleted, setDateToBeCompleted] = useState('');
     const [priority, setPriority] = useState('low');
 
     useEffect(() => {
-        if (editingTodo) {
-            setDescription(editingTodo.description);
-            setDateToBeCompleted(editingTodo.date_to_be_completed);
-            setPriority(editingTodo.priority);
-        } else {
-            setDescription('');
-            setDateToBeCompleted('');
-            setPriority('low');
-        }
-    }, [editingTodo]);
+        setDescription('');
+        setDateToBeCompleted('');
+        setPriority('low');
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            if (editingTodo) {
-                await axios.put(`http://localhost:8080/api/todos/${editingTodo.id}/`, {
-                    description,
-                    date_to_be_completed: dateToBeCompleted,
-                    priority,
-                });
-            } else {
-                await axios.post('http://localhost:8080/api/todos/', {
-                    description,
-                    date_to_be_completed: dateToBeCompleted,
-                    priority,
-                });
-            }
+            await axios.post('http://localhost:8080/api/todos/', {
+                description,
+                date_to_be_completed: dateToBeCompleted,
+                priority,
+            });
             fetchTodos(); 
             setDescription('');
             setDateToBeCompleted('');
             setPriority('low');
-            setEditingTodo(null);
         } catch (error) {
             console.error('Error submitting todo:', error);
         }
@@ -48,7 +33,7 @@ const ToDoForm = ({ fetchTodos, editingTodo, setEditingTodo }) => {
     return (
         <Col md={8} className="mx-auto mt-4 mb-4">
             <Card className="p-4">
-                <h3 className="mb-4">{editingTodo ? 'Edit Task' : 'Add New Task'}</h3>
+                <h3 className="mb-4">Add New Task</h3>
                 <form onSubmit={handleSubmit}>
                     <Row className="mb-3">
                         <Col>
@@ -90,7 +75,7 @@ const ToDoForm = ({ fetchTodos, editingTodo, setEditingTodo }) => {
                     </Row>
                     <Row>
                         <Col>
-                            <button type="submit" className="btn btn-primary">{editingTodo ? 'Update' : 'Add'} To-Do</button>
+                            <button type="submit" className="btn btn-primary">Add To-Do</button>
                         </Col>
                     </Row>
                 </form>

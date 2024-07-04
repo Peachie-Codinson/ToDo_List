@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import ToDoForm from './ToDoForm';
+import EditToDo from './EditToDo';
 
 const ToDoList = () => {
     const [inProgressTodos, setInProgressTodos] = useState([]);
@@ -119,7 +120,7 @@ const ToDoList = () => {
             <div className="container justify-content-center">
                 {!showCompleted ? (
                     <div>
-                        <ToDoForm fetchTodos={fetchTodos} editingTodo={editingTodo} setEditingTodo={setEditingTodo} />
+                        <ToDoForm fetchTodos={fetchTodos}  />
                         <div className="row justify-content-center mb-4">
                             <div className="col-md-8">
                                 <h2 className="text-left">Task list:</h2>
@@ -142,25 +143,33 @@ const ToDoList = () => {
                         {sortedTodos.map(todo => (
                             <Row key={todo.id} className="justify-content-center mb-4">
                                 <Col md={8}>
-                                    <Card className={`border-2 ${priorityColors[todo.priority]}`}>
-                                        <Card.Body className="d-flex">
-                                            <div className="flex-grow-1">
-                                                <div className="d-flex flex-column">
-                                                    <h3 className="mb-0 me-1">{todo.description}</h3>
-                                                    <p className="text-muted mb-2 mt-1">Priority: {todo.priority}</p>
+                                    {editingTodo && editingTodo.id === todo.id ? (
+                                        <EditToDo
+                                            todo={editingTodo}
+                                            updateTodo={fetchTodos}
+                                            onCancel={cancelEdit}
+                                        />
+                                    ) : (
+                                        <Card className={`border-2 ${priorityColors[todo.priority]}`}>
+                                            <Card.Body className="d-flex">
+                                                <div className="flex-grow-1">
+                                                    <div className="d-flex flex-column">
+                                                        <h3 className="mb-0 me-1">{todo.description}</h3>
+                                                        <p className="text-muted mb-2 mt-1">Priority: {todo.priority}</p>
+                                                    </div>
+                                                    <div className="d-flex flex-column mt-3">
+                                                        <p className="text-muted mb-1">Deadline: {formatDateTime(todo.date_to_be_completed)}</p>
+                                                        <p className="text-muted">Created on: {formatDateTime(todo.date_created)}</p>
+                                                    </div>
                                                 </div>
-                                                <div className="d-flex flex-column mt-3">
-                                                    <p className="text-muted mb-1">Deadline: {formatDateTime(todo.date_to_be_completed)}</p>
-                                                    <p className="text-muted">Created on: {formatDateTime(todo.date_created)}</p>
+                                                <div className="col-4 text-end">
+                                                    <Button variant="success" className="w-100 mb-2" onClick={() => markAsDone(todo.id)}>Mark as Done</Button>
+                                                    <Button variant="primary" className="w-100 mb-2" onClick={() => editTodo(todo)}>Edit</Button>
+                                                    <Button variant="danger" className="w-100" onClick={() => deleteTodo(todo.id)}>Delete</Button>
                                                 </div>
-                                            </div>
-                                            <div className="col-4 text-end">
-                                                <Button variant="success" className="w-100 mb-2" onClick={() => markAsDone(todo.id)}>Mark as Done</Button>
-                                                <Button variant="primary" className="w-100 mb-2" onClick={() => editTodo(todo)}>Edit</Button>
-                                                <Button variant="danger" className="w-100" onClick={() => deleteTodo(todo.id)}>Delete</Button>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
+                                            </Card.Body>
+                                        </Card>
+                                    )}
                                 </Col>
                             </Row>
                         ))}
