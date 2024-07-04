@@ -16,3 +16,12 @@ jobs:
       working-directory: ToDoList
       run: docker build . --file Dockerfile --tag my-backend-image:$(date +%s)
 
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build backend Docker image
+      working-directory: todo_list_front
+      run: docker build . --file Dockerfile --tag my-backend-image:$(date +%s)
+
+
