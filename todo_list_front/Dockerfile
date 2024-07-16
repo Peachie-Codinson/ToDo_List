@@ -2,13 +2,14 @@
 FROM node:14
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /todo_list_front
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package.json ./
+COPY package-lock.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --verbose
 
 # Copy the rest of the application files
 COPY . .
