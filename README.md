@@ -22,12 +22,17 @@ Before running the application, ensure you have the following installed:
     git clone https://github.com/Peachie-Codinson/ToDo_List
     ```
 
-2. Build and start the application using Docker Compose:
+2. Change the directory to that of the project:
+    ```
+    cd ToDo_List
+    ```
+
+3. Build and start the application using Docker Compose:
     ```
     docker-compose up --build
     ```
 
-3. Access the application in your browser:
+4. Access the application in your browser:
     - Open [http://localhost:3000](http://localhost:3000) to view the React frontend.
 
 ## Folder Structure
