@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image CI and Terraform
 
 on:
   push:
@@ -20,8 +20,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Build backend Docker image
+    - name: Build frontend Docker image
       working-directory: todo_list_front
-      run: docker build . --file Dockerfile --tag my-backend-image:$(date +%s)
+      run: docker build . --file Dockerfile --tag my-frontend-image:$(date +%s)
 
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      name: Checkout code
 
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.4.0
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      run: terraform plan
+
+    - name: Terraform Apply
+      env:
+        TF_VAR_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        TF_VAR_aws_region: 'eu-north-1'
+      run: terraform apply -auto-approve

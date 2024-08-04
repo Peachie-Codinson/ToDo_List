@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api'; // Import the configured API instance
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import ToDoForm from './ToDoForm';
@@ -24,7 +24,7 @@ const ToDoList = () => {
     const fetchTodos = async () => {
         try {
             const endpoint = showCompleted ? 'completed' : 'in-progress';
-            const response = await axios.get(`http://localhost:8080/api/todos/${endpoint}/`);
+            const response = await api.get(`/${endpoint}/`); // Use the api instance
             if (showCompleted) {
                 setCompletedTodos(response.data);
             } else {
@@ -37,7 +37,7 @@ const ToDoList = () => {
 
     const deleteTodo = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/api/todos/${id}/`);
+            await api.delete(`/${id}/`); // Use the api instance
             if (showCompleted) {
                 setCompletedTodos(completedTodos.filter(todo => todo.id !== id));
             } else {
@@ -69,7 +69,7 @@ const ToDoList = () => {
                 status: 'completed',
                 date_completed: new Date().toISOString(),
             };
-            await axios.put(`http://localhost:8080/api/todos/${id}/`, updatedTodo);
+            await api.put(`/${id}/`, updatedTodo); // Use the api instance
             setInProgressTodos(inProgressTodos.filter(todo => todo.id !== id));
             setCompletedTodos([...completedTodos, updatedTodo]);
         } catch (error) {
@@ -120,7 +120,7 @@ const ToDoList = () => {
             <div className="container justify-content-center">
                 {!showCompleted ? (
                     <div>
-                        <ToDoForm fetchTodos={fetchTodos}  />
+                        <ToDoForm fetchTodos={fetchTodos} />
                         <div className="row justify-content-center mb-4">
                             <div className="col-md-8">
                                 <h2 className="text-left">Task list:</h2>

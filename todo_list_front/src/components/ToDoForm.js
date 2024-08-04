@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Card, Col, Row, Button, Form } from 'react-bootstrap';
+import api from "../api.js";
 
 const ToDoForm = ({ fetchTodos }) => {
     const [description, setDescription] = useState('');
@@ -11,12 +11,12 @@ const ToDoForm = ({ fetchTodos }) => {
         setDescription('');
         setDateToBeCompleted('');
         setPriority('low');
-    }, []);
+    }, [fetchTodos]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.post('http://localhost:8080/api/todos/', {
+            await api.post('/', {
                 description,
                 date_to_be_completed: dateToBeCompleted,
                 priority,
@@ -34,51 +34,49 @@ const ToDoForm = ({ fetchTodos }) => {
         <Col md={8} className="mx-auto mt-4 mb-4">
             <Card className="p-4">
                 <h3 className="mb-4">Add New Task</h3>
-                <form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit}>
                     <Row className="mb-3">
                         <Col>
-                            <label className="form-label">
-                                Description:
-                                <input
+                            <Form.Group controlId="description">
+                                <Form.Label>Description:</Form.Label>
+                                <Form.Control
                                     type="text"
-                                    className="form-control"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                 />
-                            </label>
+                            </Form.Group>
                         </Col>
                         <Col>
-                            <label className="form-label">
-                                Date to be completed:
-                                <input
+                            <Form.Group controlId="dateToBeCompleted">
+                                <Form.Label>Date to be completed:</Form.Label>
+                                <Form.Control
                                     type="datetime-local"
-                                    className="form-control"
                                     value={dateToBeCompleted}
                                     onChange={(e) => setDateToBeCompleted(e.target.value)}
                                 />
-                            </label>
+                            </Form.Group>
                         </Col>
                         <Col>
-                            <label className="form-label">
-                                Priority:
-                                <select
-                                    className="form-control"
+                            <Form.Group controlId="priority">
+                                <Form.Label>Priority:</Form.Label>
+                                <Form.Control
+                                    as="select"
                                     value={priority}
                                     onChange={(e) => setPriority(e.target.value)}
                                 >
                                     <option value="low">Low</option>
                                     <option value="medium">Medium</option>
                                     <option value="high">High</option>
-                                </select>
-                            </label>
+                                </Form.Control>
+                            </Form.Group>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <button type="submit" className="btn btn-primary">Add To-Do</button>
+                            <Button type="submit" variant="primary">Add To-Do</Button>
                         </Col>
                     </Row>
-                </form>
+                </Form>
             </Card>
         </Col>
     );
