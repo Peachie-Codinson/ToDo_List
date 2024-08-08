@@ -9,7 +9,7 @@ COPY package.json ./
 COPY package-lock.json ./
 
 # Install dependencies
-RUN npm install --verbose
+RUN npm install --verbose --ignore-scripts
 
 # Copy the rest of the application files
 COPY . .

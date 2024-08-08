@@ -21,9 +21,7 @@ SECRET_KEY = 'django-insecure-tht@mp)lkk(&f4p_9e3wzhy+!&#lz*4&@x7gu!g%2$@%+&0yd&
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-SERVER_IP = '13.48.141.41'
-
-DEBUG = True
+# DEBUG = True
 
 CORS_ALLOWED_ORIGINS = [
     "https://13.48.141.41:3000",
@@ -33,19 +31,11 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Optionally, if you're using Django's CORS middleware
-CORS_ALLOW_ALL_ORIGINS = True  # For development only, not recommended for production
+# CORS_ALLOW_ALL_ORIGINS = True  # For development only, not recommended for production
 
-# Allowed hosts
-ALLOWED_HOSTS = [
-    'localhost',
-    SERVER_IP,
-    'localhost:3000',
-    'localhost:8080',
-    '13.48.141.41:3000',
-    '13.48.141.41:8080',
-]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 
-
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 
 # Application definition
