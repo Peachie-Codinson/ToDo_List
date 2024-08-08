@@ -26,10 +26,10 @@ SERVER_IP = '13.48.141.41'
 DEBUG = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://13.48.141.41:3000",
-    "http://localhost:3000",
-    "http://localhost:8080",
-    "http://13.48.141.41:8080",
+    "https://13.48.141.41:3000",
+    "https://localhost:3000",
+    "https://localhost:8080",
+    "https://13.48.141.41:8080",
 ]
 
 # Optionally, if you're using Django's CORS middleware
