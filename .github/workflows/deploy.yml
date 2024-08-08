@@ -20,6 +20,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         with:
           registry-type: private
+          aws-region: eu-north-1
           # no need to specify region here; set it via AWS_REGION environment variable
 
       - name: Build Docker images
