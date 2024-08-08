@@ -2,9 +2,9 @@ version: '3.9'
 
 services:
   web:
-    environment:
-      - ALLOWED_HOSTS=localhost,localhost:3000,localhost:8080,13.48.141.41,13.48.141.41:3000,13.48.141.41:8080
-      - CORS_ALLOWED_ORIGINS=http://13.48.141.41:3000,http://localhost:3000,http://localhost:8080,http://13.48.141.41:8080
+    # environment:
+    #   - ALLOWED_HOSTS=localhost,localhost:3000,localhost:8080,13.48.141.41,13.48.141.41:3000,13.48.141.41:8080
+    #   - CORS_ALLOWED_ORIGINS=http://13.48.141.41:3000,http://localhost:3000,http://localhost:8080,http://13.48.141.41:8080
     build: ./ToDoList
     command: gunicorn ToDoList.wsgi:application --bind 0.0.0.0:8000
     volumes:

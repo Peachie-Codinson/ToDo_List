@@ -24,6 +24,9 @@ SECRET_KEY = 'django-insecure-tht@mp)lkk(&f4p_9e3wzhy+!&#lz*4&@x7gu!g%2$@%+&0yd&
 
 # DEBUG = True
 
+
+CORS_ALLOW_ALL_ORIGINS = True  # For development only, not recommended for production
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8080",
@@ -33,21 +36,17 @@ CORS_ALLOWED_ORIGINS = [
 
 ALLOWED_HOSTS = [
     "13.48.141.41:8080",
-    "localhost:8080"
+    "localhost:8080",
+    "localhost",
+    "13.48.141.41"
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True  # For development only, not recommended for production
-
-# allowed_hosts = os.getenv('ALLOWED_HOSTS', 'https://localhost')
-# cors_allowed_origins = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost')
-
-# # Convert environment variable strings to lists
-# ALLOWED_HOSTS = allowed_hosts.split(',') if allowed_hosts else []
-# CORS_ALLOWED_ORIGINS = cors_allowed_origins.split(',') if cors_allowed_origins else []
-# if not ALLOWED_HOSTS:
-#     raise ImproperlyConfigured("ALLOWED_HOSTS environment variable is not set")
-
-# Application definition
+CORS_ALLOWED_HOSTS = [
+    "13.48.141.41:8080",
+    "localhost:8080",
+    "localhost",
+    "13.48.141.41"
+]
 
 INSTALLED_APPS = [
     
