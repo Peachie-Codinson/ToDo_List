@@ -47,11 +47,13 @@ jobs:
       - name: Deploy to EC2
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          AWS_REGION: eu-north-1 
         run: |
           # Install SSH client
           sudo apt-get update
-          sudo apt-get install -y ssh
+          sudo apt-get install -y ssh-agent
+
+          # Start the SSH agent
+          eval $(ssh-agent -s)
 
           # Decode and add the SSH private key to the SSH agent
           echo "$SSH_PRIVATE_KEY" | base64 -d > /tmp/ssh-private-key.pem
@@ -65,3 +67,4 @@ jobs:
             docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/web:latest
             docker-compose up --build
           EOF
+
