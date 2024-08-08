@@ -24,7 +24,6 @@ jobs:
             aws-region: eu-north-1
         with:
           registry-type: private
-          aws-region: eu-north-1
       - name: Build Docker images
         run: |
           docker build -t mockproj-web ./ToDoList
