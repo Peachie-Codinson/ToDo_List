@@ -1,0 +1,58 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build Docker images
+        run: |
+          docker build -t mockproj-web ./ToDoList
+          docker build -t mockproj-frontend ./todo_list_front
+          docker build -t mockproj-django ./ToDoList
+
+      - name: Tag and Push Docker images
+        run: |
+          docker tag mockproj-web 058264232850.dkr.ecr.eu-north-1.amazonaws.com/django:latest
+          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/django:latest
+          
+          docker tag mockproj-frontend 058264232850.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
+          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
+          
+          docker tag mockproj-django 058264232850.dkr.ecr.eu-north-1.amazonaws.com/web:latest
+          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/web:latest
+
+      - name: Deploy to EC2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          # Install SSH client
+          sudo apt-get update
+          sudo apt-get install -y ssh
+
+          # Decode and add the SSH private key to the SSH agent
+          echo "$SSH_PRIVATE_KEY" | base64 -d > /tmp/ssh-private-key.pem
+          chmod 400 /tmp/ssh-private-key.pem
+          ssh-add /tmp/ssh-private-key.pem
+
+          # SSH into the EC2 instance and pull the images
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh-private-key.pem ec2-user@13.48.141.41 << 'EOF'
+            docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/django:latest
+            docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
+            docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/web:latest
+            docker-compose -f /path/to/your/docker-compose.yml up -d
+          EOF

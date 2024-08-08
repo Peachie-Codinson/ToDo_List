@@ -20,13 +20,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-tht@mp)lkk(&f4p_9e3wzhy+!&#lz*4&@x7gu!g%2$@%+&0yd&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
+SERVER_IP = '13.48.141.41'
+
 DEBUG = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://16.16.207.89:3000",
+    "http://13.48.141.41:3000",
     "http://localhost:3000",
     "http://localhost:8080",
-    "http://16.16.207.89:8080",
+    "http://13.48.141.41:8080",
 ]
 
 # Optionally, if you're using Django's CORS middleware
@@ -35,12 +38,13 @@ CORS_ALLOW_ALL_ORIGINS = True  # For development only, not recommended for produ
 # Allowed hosts
 ALLOWED_HOSTS = [
     'localhost',
-    '16.16.207.89',
+    SERVER_IP,
     'localhost:3000',
     'localhost:8080',
-    '16.16.207.89:3000',
-    '16.16.207.89:8080',
+    '13.48.141.41:3000',
+    '13.48.141.41:8080',
 ]
+
 
 
 
