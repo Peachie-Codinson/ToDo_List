@@ -24,6 +24,7 @@ jobs:
             region: eu-north-1
         with:
           registry-type: private
+          region: eu-north-1
 
       - name: Build Docker images
         run: |
