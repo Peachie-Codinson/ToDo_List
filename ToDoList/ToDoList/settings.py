@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,19 +25,27 @@ SECRET_KEY = 'django-insecure-tht@mp)lkk(&f4p_9e3wzhy+!&#lz*4&@x7gu!g%2$@%+&0yd&
 # DEBUG = True
 
 CORS_ALLOWED_ORIGINS = [
-    "https://13.48.141.41:3000",
-    "https://localhost:3000",
-    "https://localhost:8080",
-    "https://13.48.141.41:8080",
+    "http://localhost:3000",
+    "http://localhost:8080",
+    "http://13.48.141.41:3000",
+    "http://13.48.141.41:8080",
 ]
 
-# Optionally, if you're using Django's CORS middleware
+ALLOWED_HOSTS = [
+    "13.48.141.41",
+    "localhost"
+]
+
 # CORS_ALLOW_ALL_ORIGINS = True  # For development only, not recommended for production
 
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+# allowed_hosts = os.getenv('ALLOWED_HOSTS', 'https://localhost')
+# cors_allowed_origins = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
-
+# # Convert environment variable strings to lists
+# ALLOWED_HOSTS = allowed_hosts.split(',') if allowed_hosts else []
+# CORS_ALLOWED_ORIGINS = cors_allowed_origins.split(',') if cors_allowed_origins else []
+# if not ALLOWED_HOSTS:
+#     raise ImproperlyConfigured("ALLOWED_HOSTS environment variable is not set")
 
 # Application definition
 
