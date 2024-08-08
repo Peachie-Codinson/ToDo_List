@@ -32,11 +32,11 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 ALLOWED_HOSTS = [
-    "13.48.141.41",
-    "localhost"
+    "13.48.141.41:8080",
+    "localhost:8080"
 ]
 
-# CORS_ALLOW_ALL_ORIGINS = True  # For development only, not recommended for production
+CORS_ALLOW_ALL_ORIGINS = True  # For development only, not recommended for production
 
 # allowed_hosts = os.getenv('ALLOWED_HOSTS', 'https://localhost')
 # cors_allowed_origins = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost')
