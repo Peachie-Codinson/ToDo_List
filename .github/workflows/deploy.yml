@@ -54,5 +54,5 @@ jobs:
             docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/django:latest
             docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
             docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/web:latest
-            docker-compose -f /path/to/your/docker-compose.yml up -d
+            docker-compose up --build
           EOF
