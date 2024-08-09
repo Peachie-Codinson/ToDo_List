@@ -41,12 +41,12 @@ ALLOWED_HOSTS = [
     "13.48.141.41"
 ]
 
-CORS_ALLOWED_HOSTS = [
-    "13.48.141.41:8080",
-    "localhost:8080",
-    "localhost",
-    "13.48.141.41"
-]
+# CORS_ALLOWED_HOSTS = [
+#     "13.48.141.41:8080",
+#     "localhost:8080",
+#     "localhost",
+#     "13.48.141.41"
+# ]
 
 INSTALLED_APPS = [
     
