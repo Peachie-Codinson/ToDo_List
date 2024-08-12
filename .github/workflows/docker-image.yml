@@ -95,6 +95,6 @@ jobs:
         run: |
           REPO_NAME="mockproj-nginx-repo"
           aws ecr describe-repositories --repository-names $REPO_NAME || aws ecr create-repository --repository-name $REPO_NAME
-          docker-compose -f docker-compose.yml build nginx
+          docker build -f nginx/Dockerfile -t mockproj-nginx:${{ github.sha }} nginx
           docker tag mockproj-nginx:${{ github.sha }} 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
           docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
