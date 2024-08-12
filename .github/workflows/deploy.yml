@@ -1,20 +1,26 @@
-name: Deploy to AWS
+name: Docker Image CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -27,48 +33,37 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker images
+      - name: Build backend Docker image
+        working-directory: ToDoList
         run: |
-          docker build -t mockproj-web ./ToDoList
-          docker build -t mockproj-frontend ./todo_list_front
-          docker build -t mockproj-django ./ToDoList
+          docker build . --file Dockerfile --tag mockproj-web:${{ github.sha }}
 
-      - name: Tag and Push Docker images
+      - name: Build nginx Docker image
         run: |
-          docker tag mockproj-web 058264232850.dkr.ecr.eu-north-1.amazonaws.com/django:latest
-          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/django:latest
-          
-          docker tag mockproj-frontend 058264232850.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
-          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
-          
-          docker tag mockproj-django 058264232850.dkr.ecr.eu-north-1.amazonaws.com/web:latest
-          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/web:latest
+          docker-compose -f docker-compose.yml build nginx
 
-      - name: Deploy to EC2
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          AWS_REGION: eu-north-1 
+      - name: Tag and push backend Docker image to ECR
         run: |
-          # Install SSH client
-          sudo apt-get update
-          sudo apt-get install -y ssh
+          REPO_NAME="mockproj-web-repo"
+          aws ecr describe-repositories --repository-names $REPO_NAME || aws ecr create-repository --repository-name $REPO_NAME
+          docker tag mockproj-web:${{ github.sha }} 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
+          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
 
-          # Decode and add the SSH private key to the SSH agent
-          echo "$SSH_PRIVATE_KEY" | base64 -d > /tmp/ssh-private-key.pem
-          chmod 400 /tmp/ssh-private-key.pem
-          eval $(ssh-agent -s)
-          ssh-add /tmp/ssh-private-key.pem
+      - name: Tag and push nginx Docker image to ECR
+        run: |
+          REPO_NAME="mockproj-nginx-repo"
+          aws ecr describe-repositories --repository-names $REPO_NAME || aws ecr create-repository --repository-name $REPO_NAME
+          docker tag nginx:latest 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
+          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
 
-          # SSH into the EC2 instance and pull the images
-          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=2 -i /tmp/ssh-private-key.pem ec2-user@13.48.141.41 << 'EOF'
-            docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/django:latest
-            docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
-            docker pull 058264232850.dkr.ecr.eu-north-1.amazonaws.com/web:latest
-            
-            # Apply Django migrations
-            docker-compose run web python manage.py migrate
-            
-            # Build and start containers
-            docker-compose up --build -d
-            exit
-          EOF
+      - name: Build frontend Docker image
+        working-directory: todo_list_front
+        run: |
+          docker build . --file Dockerfile --tag mockproj-frontend:${{ github.sha }}
+
+      - name: Tag and push frontend Docker image to ECR
+        run: |
+          REPO_NAME="mockproj-frontend-repo"
+          aws ecr describe-repositories --repository-names $REPO_NAME || aws ecr create-repository --repository-name $REPO_NAME
+          docker tag mockproj-frontend:${{ github.sha }} 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
+          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
