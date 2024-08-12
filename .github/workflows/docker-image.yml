@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-backend:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,6 +32,10 @@ jobs:
         run: |
           docker build . --file Dockerfile --tag mockproj-web:${{ github.sha }}
 
+      - name: Build nginx Docker image
+        run: |
+          docker-compose -f docker-compose.yml build nginx
+
       - name: Tag and push backend Docker image to ECR
         run: |
           REPO_NAME="mockproj-web-repo"
@@ -39,25 +43,12 @@ jobs:
           docker tag mockproj-web:${{ github.sha }} 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
           docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
 
-  build-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-north-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+      - name: Tag and push nginx Docker image to ECR
+        run: |
+          REPO_NAME="mockproj-nginx-repo"
+          aws ecr describe-repositories --repository-names $REPO_NAME || aws ecr create-repository --repository-name $REPO_NAME
+          docker tag mockproj-nginx:${{ github.sha }} 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
+          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
 
       - name: Build frontend Docker image
         working-directory: todo_list_front
@@ -69,32 +60,4 @@ jobs:
           REPO_NAME="mockproj-frontend-repo"
           aws ecr describe-repositories --repository-names $REPO_NAME || aws ecr create-repository --repository-name $REPO_NAME
           docker tag mockproj-frontend:${{ github.sha }} 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
-          docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
-
-  build-nginx:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-north-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build and push nginx Docker image to ECR
-        run: |
-          REPO_NAME="mockproj-nginx-repo"
-          aws ecr describe-repositories --repository-names $REPO_NAME || aws ecr create-repository --repository-name $REPO_NAME
-          docker-compose -f docker-compose.yml build nginx
-          docker tag mockproj-nginx:${{ github.sha }} 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
           docker push 058264232850.dkr.ecr.eu-north-1.amazonaws.com/$REPO_NAME:${{ github.sha }}
