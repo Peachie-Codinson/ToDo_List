@@ -10,4 +10,4 @@ EXPOSE 80 443
 
 COPY ./nginx/conf.d /etc/nginx/conf.d
 COPY ./nginx/cert /etc/nginx/cert
-# COPY ./nginx/cert/private /etc/nginx/cert/private
+COPY ./nginx/cert/private /etc/nginx/cert/private

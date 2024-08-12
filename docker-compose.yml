@@ -9,7 +9,7 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/cert:/etc/nginx/cert
-      # - ./nginx/cert/private:/etc/nginx/cert/private
+      - ./nginx/cert/private:/etc/nginx/cert/private
     networks:
       - mynetwork
     depends_on:
